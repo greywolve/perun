@@ -1,6 +1,7 @@
 (ns io.perun.markdown
   (:require [boot.util       :as u]
             [io.perun.core   :as perun]
+            [me.raynes.conch.low-level :as sh]
             [clojure.java.io :as io]
             [clojure.string  :as str]
             [endophile.core  :as endophile]
@@ -43,14 +44,28 @@
       endophile/to-clj
       endophile/html-string))
 
-(defn process-file [file]
+(defn markdown-to-html-external [cmd file-content]
+  (let [p (apply sh/proc cmd)]
+    (sh/feed-from-string p file-content)
+    (sh/done p)
+    (sh/stream-to-string p :out)))
+
+(defn process-file-with [file f]
   (let [file-content (slurp file)]
     ; .getName returns only the filename so this should work cross platform
     (u/info "Processing Markdown: %s\n" (.getName file))
     [(.getName file) (merge (parse-file-metadata file-content)
-                            {:content (markdown-to-html file-content)})]))
+                            {:content (f file-content)})]))
 
-(defn parse-markdown [markdown-files]
-  (let [parsed-files (into {} (map #(-> % io/file process-file) markdown-files))]
+(defn parse-files-with [markdown-files f]
+  (->> markdown-files
+       (map #(-> % io/file (process-file-with f)))
+       (into {})))
+
+(defn parse-markdown [markdown-files cmd]
+  (let [process-fn (if cmd
+                     (partial markdown-to-html-external cmd)
+                     markdown-to-html)
+        parsed-files (parse-files-with markdown-files process-fn)]
     (u/info "Parsed %s markdown files\n" (count markdown-files))
     parsed-files))

@@ -1,15 +1,16 @@
 (set-env!
-  :source-paths #{"test"}
-  :resource-paths #{"src" "resources"}
-  :dependencies '[[boot/core "2.1.2" :scope "provided"]
-                  [adzerk/bootlaces "0.1.9" :scope "test"]
-                  [jeluard/boot-notify "0.1.2" :scope "test"]
-                  [endophile "0.1.2" :scope "test"]
-                  [circleci/clj-yaml "0.5.3" :scope "test"]
-                  [time-to-read "0.1.0" :scope "test"]
-                  [sitemap "0.2.4" :scope "test"]
-                  [clj-rss "0.1.9" :scope "test"]
-                  [gravatar "0.1.0" :scope "test"]])
+ :source-paths #{"test"}
+ :resource-paths #{"src" "resources"}
+ :dependencies '[[boot/core "2.1.2" :scope "provided"]
+                 [adzerk/bootlaces "0.1.9" :scope "test"]
+                 [jeluard/boot-notify "0.1.2" :scope "test"]
+                 [endophile "0.1.2" :scope "test"]
+                 [circleci/clj-yaml "0.5.3" :scope "test"]
+                 [time-to-read "0.1.0" :scope "test"]
+                 [sitemap "0.2.4" :scope "test"]
+                 [clj-rss "0.1.9" :scope "test"]
+                 [gravatar "0.1.0" :scope "test"]
+                 [me.raynes/conch "0.8.0"]])
 
 (require '[adzerk.bootlaces :refer :all])
 
